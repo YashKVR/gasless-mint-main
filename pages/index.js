@@ -1,6 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import Head from 'next/head';
-import { Web3Button, ConnectWallet, useAddress, useContract, useContractRead } from "@thirdweb-dev/react";
+import { useNetwork, ConnectWallet, useAddress, useContract, useContractRead, ChainId } from "@thirdweb-dev/react";
 import toast from 'react-hot-toast';
 import { ethers } from 'ethers';
 
@@ -8,11 +8,13 @@ export default function Home() {
   const tokenId = 0; // the id of the NFT you want to claim
   const quantity = 1; // how many NFTs you want to claim
   const address = useAddress();
+  const [, switchNetwork] = useNetwork();
   const { contract } = useContract("0x05C2D4Fdc3C2Dfda229EDe73094326b2F7e7e77C", "edition-drop")
   const { data: totalSupply } = useContractRead(contract, "totalSupply", tokenId)
 
   const handleMint = async () => {
     if (address) {
+      switchNetwork(ChainId.Mumbai)
       const nfts = await contract.getOwned(address);
       const notification = toast.loading("Minting Your Free NFT");
 
